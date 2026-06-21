@@ -53,6 +53,13 @@ MemoMoss is a caregiver-assisted memory companion platform designed to support p
 
 This project is currently under active development. The present repository contains the initial frontend prototype, backend setup, database design, and system architecture for MemoMoss.
 
+## Current Status
+
+- Backend foundation implemented using Node.js, Express, MongoDB Atlas and Mongoose.
+- Patient registration API implemented.
+- Frontend dashboards currently available as UI prototypes.
+- Future work includes full React frontend integration.
+
 ## Future Scope
 
 * Advanced face recognition
