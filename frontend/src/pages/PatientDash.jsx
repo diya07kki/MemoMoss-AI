@@ -1,6 +1,18 @@
 import { useNavigate } from "react-router-dom";
 export default function PatientDash() {
-  const navigate = useNavigate();  
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  if (!user) {
+    navigate("/");
+    return null;
+  }
+  
+  const surname = user?.name?.split(" ")[0] || "Friend";
+  const navigate = useNavigate();
+  const handleLogout = () => {
+  localStorage.removeItem("user");
+  navigate("/");
+};
   return (
     <div className="min-h-screen bg-[#eef7f8] pt-28">
 
@@ -50,7 +62,12 @@ export default function PatientDash() {
                 <div className="w-12 h-12 rounded-full bg-purple-200 flex items-center justify-center font-semibold">
                     S
                 </div>
-
+                <button
+                    onClick={handleLogout}
+                    className="px-4 py-2 rounded-full bg-red-100 text-red-600 font-medium hover:bg-red-200"
+                    >
+                    Logout
+                </button>
                 </div>
 
             </div>
@@ -67,7 +84,7 @@ export default function PatientDash() {
                 </div>
 
                 <h2 className="text-6xl font-bold text-slate-800 mb-5">
-                Good Afternoon, Mr. Sharma 😊
+                Good Afternoon, {surname} 😊
                 </h2>
 
                 <p className="text-2xl text-slate-600 max-w-3xl">

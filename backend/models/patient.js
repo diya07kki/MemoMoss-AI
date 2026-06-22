@@ -6,15 +6,24 @@ const patientSchema = mongoose.Schema({
     },
     age: {
         type: Number,
-        required: true 
+        required: false 
     },
     phone: {
         type: String,
-        required: true
+        required: false
     },
     email: {
         type: String,
         required: false
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    role: {
+        type: String,
+        enum: ["patient", "caregiver"],
+        default: "patient"
     },
     faceVerified: {
         type: Boolean,
@@ -30,6 +39,6 @@ const patientSchema = mongoose.Schema({
     }
 },
 {
-    timeStamps: true
+    timestamps: true
 });
 module.exports = mongoose.model("Patient", patientSchema);

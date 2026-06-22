@@ -6,14 +6,84 @@ export default function Login() {
 const navigate = useNavigate();
 const [role, setRole] = useState("");
 const [isSignIn, setIsSignIn] = useState(true);
+const [name, setName] = useState("");
+const [email, setEmail] = useState("");
+const [password, setPassword] = useState("");
 
+const handleLogin = async () => {
+if (!role) {
+        alert("Please select Patient or Caregiver");
+        return;
+    }
 
-const handleSubmit = () => {
-if (role === "patient") {
-navigate("/patient");
-} else {
-navigate("/caregiver");
-}
+    if (!name || !email || !password) {
+        alert("Please fill all fields");
+        return;
+    }
+
+    if (!/^[A-Za-z\s]+$/.test(name)) {
+        alert("Name should contain only letters");
+        return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert("Please enter a valid email");
+        return;
+    }
+
+    if (password.length < 6) {
+        alert("Password must be at least 6 characters");
+        return;
+    }
+  try {
+
+    const endpoint = isSignIn
+    ? "http://localhost:5000/login"
+    : "http://localhost:5000/register";
+
+    const response = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+    },
+
+    body: JSON.stringify({
+        name,
+        email,
+        password,
+        role,
+    }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        alert(data.message);
+        return;
+    }
+
+    if (!isSignIn) {
+        alert("Account created successfully!");
+
+        setIsSignIn(true);
+
+        return;
+    }
+    if (data.role === "patient") {
+        localStorage.setItem("user",JSON.stringify(data.patient));
+        navigate("/patient");
+    } else {
+        localStorage.setItem("user",JSON.stringify(data.patient));
+        navigate("/caregiver");
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert("Server connection failed");
+
+  }
 };
 
 return ( <div className="min-h-screen bg-[#eaf4f7] flex">
@@ -21,31 +91,31 @@ return ( <div className="min-h-screen bg-[#eaf4f7] flex">
 
   {/* LEFT SIDE */}
 
-  <div className="w-1/2 flex flex-col justify-center px-20">
+  <div className="w-1/2 flex flex-col justify-center px-16">
 
     <div className="flex items-center gap-4 mb-10">
       <div className="w-16 h-16 rounded-full bg-white shadow flex items-center justify-center text-2xl">
         🤍
       </div>
 
-      <h1 className="text-4xl font-bold text-slate-900">
+      <h1 className="text-3xl font-bold text-slate-900">
         MemoMoss AI
       </h1>
     </div>
 
-    <h2 className="text-7xl font-bold text-slate-900 leading-tight">
+    <h2 className="text-5xl font-bold text-slate-900 leading-tight">
       A gentle companion,
       <br />
       always by your side.
     </h2>
 
-    <p className="mt-8 text-2xl text-slate-600 max-w-3xl">
+    <p className="mt-6 text-lg text-slate-600 max-w-2xl leading-relaxed">
       MemoMoss helps you remember the people,
       moments and little routines that make every day
       feel easier — together with the family who loves you.
     </p>
 
-    <div className="mt-10 space-y-6 text-xl">
+    <div className="mt-8 space-y-4 text-lg">
 
       <div className="flex items-center gap-4">
         ✨ Friendly daily reminders
@@ -65,11 +135,11 @@ return ( <div className="min-h-screen bg-[#eaf4f7] flex">
 
   {/* RIGHT SIDE */}
 
-  <div className="w-1/2 flex items-center justify-center">
+  <div className="w-1/2 flex items-center justify-center py-7">
 
-    <div className="bg-white w-[600px] rounded-[32px] shadow-lg p-10">
+    <div className="bg-white w-[520px] rounded-[32px] shadow-lg p-8">
 
-      <h2 className="text-4xl font-bold text-slate-900">
+      <h2 className="text-3xl font-bold text-slate-900">
         {isSignIn ? "Welcome back" : "Create your account"}
       </h2>
 
@@ -150,35 +220,33 @@ return ( <div className="min-h-screen bg-[#eaf4f7] flex">
       <input
         type="text"
         placeholder="Your name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
         className="w-full border rounded-full px-6 py-4 mb-4"
-      />
+     />
 
       <input
         type="email"
         placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
         className="w-full border rounded-full px-6 py-4 mb-4"
-      />
+     />
 
       <input
         type="password"
         placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
         className="w-full border rounded-full px-6 py-4 mb-6"
-      />
+     />
 
       <button
-        onClick={() => {
-            if (role === "patient") {
-            navigate("/patient");
-            } else if (role === "caregiver") {
-            navigate("/caregiver");
-            } else {
-            alert("Please select Patient or Caregiver");
-            }
-        }}
+        onClick={handleLogin}
         className="w-full py-4 rounded-full bg-sky-500 text-white font-semibold"
         >
-        Sign In
-        </button>
+        {isSignIn ? "Sign In" : "Create Account"}
+    </button>
 
     </div>
 
