@@ -33,8 +33,12 @@ const patientSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
+    linkedPatientEmail: {
+        type: String,
+        default: null
+    },
     authorizedGuardian: {
-        type: Array,
+        type: [String],
         default: []
     }
 },

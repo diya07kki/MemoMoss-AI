@@ -9,6 +9,7 @@ const [isSignIn, setIsSignIn] = useState(true);
 const [name, setName] = useState("");
 const [email, setEmail] = useState("");
 const [password, setPassword] = useState("");
+const [linkedPatientEmail, setLinkedPatientEmail] = useState("");
 
 const handleLogin = async () => {
 if (!role) {
@@ -52,6 +53,7 @@ if (!role) {
         email,
         password,
         role,
+        linkedPatientEmail,
     }),
     });
 
@@ -232,6 +234,16 @@ return ( <div className="min-h-screen bg-[#eaf4f7] flex">
         onChange={(e) => setEmail(e.target.value)}
         className="w-full border rounded-full px-6 py-4 mb-4"
      />
+
+      {role === "caregiver" && (
+            <input
+                type="email"
+                placeholder="Patient Email"
+                value={linkedPatientEmail}
+                onChange={(e) => setLinkedPatientEmail(e.target.value)}
+                className="w-full border rounded-full px-6 py-4 mb-4"
+            />
+        )}
 
       <input
         type="password"

@@ -24,12 +24,33 @@ app.post("/register", async (req,res) =>{
     try {   
         const patient = new Patient(req.body);
         await patient.save();
+        if (patient.role === "caregiver" && patient.linkedPatientEmail) {
+
+            console.log("Caregiver detected");
+            console.log("Looking for patient:", patient.linkedPatientEmail);
+
+            const updatedPatient = await Patient.findOneAndUpdate(
+                {
+                    email: patient.linkedPatientEmail,
+                    role: "patient"
+                },
+                {
+                    $push: {
+                        authorizedGuardian: patient.email
+                    }
+                },
+                { new: true }
+            );
+
+            console.log("Updated patient:", updatedPatient);
+        }
         res.status(201).json({
             success: true,
             message: "Patient Registration Successful",
             patient
         });
     } catch(error){
+        console.log(error);
         res.status(400).json({
             success: false,
             message: "Patient Registration Failed",

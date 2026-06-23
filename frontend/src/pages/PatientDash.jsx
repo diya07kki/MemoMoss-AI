@@ -1,18 +1,31 @@
 import { useNavigate } from "react-router-dom";
 export default function PatientDash() {
-  const user = JSON.parse(localStorage.getItem("user"));
+    const navigate = useNavigate();
+    const user = JSON.parse(localStorage.getItem("user"));
 
-  if (!user) {
+    if (!user) {
+        navigate("/");
+        return null;
+    }
+
+    const surname = user?.name?.split(" ")[0] || "Friend";
+    
+    const handleLogout = () => {
+    localStorage.removeItem("user");
     navigate("/");
-    return null;
-  }
-  
-  const surname = user?.name?.split(" ")[0] || "Friend";
-  const navigate = useNavigate();
-  const handleLogout = () => {
-  localStorage.removeItem("user");
-  navigate("/");
-};
+    };
+    const now = new Date();
+
+    const currentDate = now.toLocaleDateString("en-IN", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    });
+
+    const currentTime = now.toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    });
   return (
     <div className="min-h-screen bg-[#eef7f8] pt-28">
 
@@ -43,11 +56,11 @@ export default function PatientDash() {
 
                 <div className="text-right">
                     <h3 className="font-semibold text-slate-700">
-                    Sunday 21 June
+                    {currentDate}
                     </h3>
 
                     <p className="text-slate-500">
-                    16:09
+                    {currentTime}
                     </p>
                 </div>
 
